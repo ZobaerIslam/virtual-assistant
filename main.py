@@ -6,7 +6,6 @@ import datetime
 import wikipedia
 import pyjokes
 
-
 # Set female voice and voice rate
 en_female_voice_id = 'english_rp+f3'
 voice_rate = 160
@@ -63,9 +62,9 @@ def run_eliza():
     if 'time' in command:
         time = datetime.datetime.now().strftime('%I:%M %p')
         talk('Current time is: ' + str(time))
-    elif 'who is' in command:
-        person = command.replace('who is', '')
-        info = wikipedia.summary(person, 1)
+    elif 'what is' in command:
+        topic = command.replace('what is', '')
+        info = wikipedia.summary(topic, 1)
         talk(info)
     elif 'play' in command:
         song = command.replace('play', 'playing')
@@ -73,6 +72,9 @@ def run_eliza():
         pywhatkit.playonyt(song)
     elif 'joke' in command:
         talk(pyjokes.get_joke())
+    elif 'ok thank you' in command or 'good bye':
+        talk('Have a nice day. Good bye sir.')
+        exit()
 
 
 while True:

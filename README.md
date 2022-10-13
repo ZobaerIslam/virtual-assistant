@@ -8,3 +8,8 @@
 - engine.setProperty('voice', 'english+f4')
 - engine.setProperty('voice', 'english_rp+f3') # refer
 - engine.setProperty('voice', 'english_rp+f4')
+
+**To run this project needs some install python packages, so to do that run the below code:**
+`pip install -r /path/to/requirements.txt`
+
+If you have any error while install python modules then search error on Google and follow this instruction.
