@@ -1,27 +1,28 @@
 # Import essential module for this project
 import speech_recognition as sr
 import pyttsx3
+import pywhatkit
+import datetime
+import wikipedia
+import pyjokes
 
-# Creating a Recognizer instance
 
-# Create objects for text to speech
+# Set female voice and voice rate
+en_female_voice_id = 'english_rp+f3'
+voice_rate = 160
+
+# Create instances for text to speech
 try:
     recognizer = sr.Recognizer()
     ts_eng = pyttsx3.init()
 
+    # Set Female voice
+    ts_eng.setProperty('voice', en_female_voice_id)  # changes voices. to female
+    # Set voice rate
+    ts_eng.setProperty('rate', voice_rate)  # changes voice rate.
+
 except Exception as e:
-    print(e)
-
-
-# Default female voice and voice rate
-en_female_voice_id = 'english_rp+f3'
-voice_rate = 160
-
-# Set Female voice
-ts_eng.setProperty('voice', en_female_voice_id)   # changes voices. to female
-
-# Set voice rate
-ts_eng.setProperty('rate', voice_rate)    # changes voice rate.
+    print("Exception: " + str(e))
 
 
 # Text to speech
@@ -31,21 +32,48 @@ def talk(text):
     ts_eng.runAndWait()
 
 
-welcome_speech = """Hi, I am Siri, 
-I am your virtual assistant. 
-How may i help you, Sir? """
+# Set Virtual assistant name
+bot_name = 'eliza'
 
+welcome_speech = f"Hi, I am {bot_name}, I am your virtual assistant. How may i help you, Sir? "
 talk(welcome_speech)
 
 
-try:
+# Take command from speech
+def take_command():
     with sr.Microphone() as source:
         print('Listening...')
         voice = recognizer.listen(source)
-        command = recognizer.recognize_google(voice)
-        command = command.lower()
+        command = ""
+        try:
+            command = recognizer.recognize_google(voice)
 
-        talk(command)
+        except Exception as ex:
+            print('Exception: ' + str(ex))
+            print('Say something...')
 
-except Exception as e:
-    print(e)
+    return command
+
+
+# Perform commands
+def run_eliza():
+    command = take_command().lower()
+    if 'eliza' in command:
+        command = command.replace('eliza', '')
+    if 'time' in command:
+        time = datetime.datetime.now().strftime('%I:%M %p')
+        talk('Current time is: ' + str(time))
+    elif 'who is' in command:
+        person = command.replace('who is', '')
+        info = wikipedia.summary(person, 1)
+        talk(info)
+    elif 'play' in command:
+        song = command.replace('play', 'playing')
+        talk(song)
+        pywhatkit.playonyt(song)
+    elif 'joke' in command:
+        talk(pyjokes.get_joke())
+
+
+while True:
+    run_eliza()
